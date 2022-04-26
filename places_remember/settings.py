@@ -27,7 +27,7 @@ SECRET_KEY = secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'placesremember.ru']
 
 
 # Application definition
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
 )
 
 MIDDLEWARE = [
@@ -133,3 +132,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = social_auth_vk_key
+SOCIAL_AUTH_VK_OAUTH2_SECRET = social_auth_vk_secret
