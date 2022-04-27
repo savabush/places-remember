@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
-from secret import *
+import secret
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secret_key
+SECRET_KEY = secret.secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'placesremember.ru']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'placesremember.ru']
 
 
 # Application definition
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 MIDDLEWARE = [
@@ -139,5 +141,5 @@ LOGOUT_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-SOCIAL_AUTH_VK_OAUTH2_KEY = social_auth_vk_key
-SOCIAL_AUTH_VK_OAUTH2_SECRET = social_auth_vk_secret
+SOCIAL_AUTH_VK_OAUTH2_KEY = secret.social_auth_vk_key
+SOCIAL_AUTH_VK_OAUTH2_SECRET = secret.social_auth_vk_secret
