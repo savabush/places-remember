@@ -143,3 +143,4 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 SOCIAL_AUTH_VK_OAUTH2_KEY = secret.social_auth_vk_key
 SOCIAL_AUTH_VK_OAUTH2_SECRET = secret.social_auth_vk_secret
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['photos']
