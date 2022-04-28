@@ -6,7 +6,8 @@ class Memory(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memories')
     name = models.CharField(max_length=50)
     comment = models.CharField(max_length=150)
-    points = models.JSONField(default=None)
+    point_lng = models.CharField(max_length=20, default=0)
+    point_lat = models.CharField(max_length=20, default=0)
 
     class Meta:
         verbose_name = 'Memory'
