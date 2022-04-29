@@ -14,4 +14,4 @@ class Memory(models.Model):
         verbose_name_plural = 'Memories'
 
     def __str__(self):
-        return f'Name - {self.name}'
+        return f'Author - {self.author}, name - {self.name}'

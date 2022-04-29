@@ -7,7 +7,7 @@
 </head>
 <body>
 {% if user.is_authenticated %}
-<img id="profile_img">
+<img id="profile_img" src="">
 <script type="text/javascript">
     $.getJSON('https://api.vk.com/method/photos.get?album_id=profile&owner_id={{ owner_id_vk }}&v=5.131&access_token={{ vk_access_token }}',
     function(profile_pic) {
@@ -16,7 +16,21 @@
     document.getElementById('profile_img').src = profile_pic.slice(1, -1);
     });
 </script>
-<a>{{ user.first_name }}</a>
+<p>{{ user.first_name }}</p>
+{% if memories %}
+    {% for memory in memories %}
+        <ul>
+            <li>{{ memory.name }}</li>
+        </ul>
+    {% endfor %}
+    <p>
+        <a href="addmemory/">Create a new memory</a>
+    </p>
+{% else %}
+    <p>
+        <a href="addmemory/">Create a new memory</a>
+    </p>
+{% endif %}
 <a href="logout/">Logout</a>
 {% else %}
 <a href="login/vk-oauth2">Sign in with VKontakte</a>
