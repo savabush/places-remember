@@ -7,32 +7,36 @@
 </head>
 <body>
 {% if user.is_authenticated %}
-<img id="profile_img" src="">
-<script type="text/javascript">
-    $.getJSON('https://api.vk.com/method/photos.get?album_id=profile&owner_id={{ owner_id_vk }}&v=5.131&access_token={{ vk_access_token }}',
-    function(profile_pic) {
-    var profile_pic_items = profile_pic.response.items[profile_pic.response.items.length - 1]
-    profile_pic = JSON.stringify(profile_pic_items.sizes[profile_pic_items.sizes.length - 1].url)
-    document.getElementById('profile_img').src = profile_pic.slice(1, -1);
-    });
-</script>
-<p>{{ user.first_name }}</p>
-{% if memories %}
-    {% for memory in memories %}
-        <ul>
-            <li>{{ memory.name }}</li>
-        </ul>
-    {% endfor %}
-    <p>
-        <a href="addmemory/">Create a new memory</a>
-    </p>
-{% else %}
-    <p>
-        <a href="addmemory/">Create a new memory</a>
-    </p>
-{% endif %}
-<a href="logout/">Logout</a>
-{% else %}
+    <img id="profile_img" src="">
+    <script type="text/javascript">
+        $.getJSON('https://api.vk.com/method/photos.get?album_id=profile&owner_id={{ owner_id_vk }}&v=5.131&access_token={{ vk_access_token }}',
+        function(profile_pic) {
+        var profile_pic_items = profile_pic.response.items[profile_pic.response.items.length - 1]
+        profile_pic = JSON.stringify(profile_pic_items.sizes[profile_pic_items.sizes.length - 1].url)
+        document.getElementById('profile_img').src = profile_pic.slice(1, -1);
+        });
+    </script>
+    <p>{{ user.first_name }}</p>
+    {% if memories %}
+        {% for memory in memories %}
+            <form method="post" action="">
+                {% csrf_token %}
+                <ul>
+                    <li>{{ memory.name }}</li>
+                </ul>
+                <input name='{{ memory.id }}' type="submit" value="Delete">
+            </form>
+        {% endfor %}
+        <p>
+            <a href="addmemory/">Create a new memory</a>
+        </p>
+    {% else %}
+        <p>
+            <a href="addmemory/">Create a new memory</a>
+        </p>
+    {% endif %}
+    <a href="logout/">Logout</a>
+    {% else %}
 <a href="login/vk-oauth2">Sign in with VKontakte</a>
 {% endif %}
 </body>
