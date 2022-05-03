@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Places remember</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
 </head>
-<style>
-#map { position: absolute; top: 0; bottom: 0; width: 10%; height: 10% }
-</style>
 <body>
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 <link rel="stylesheet"
@@ -30,30 +28,81 @@
         <p>
             <a href='addmemory/'>Create a new memory</a>
         </p>
-            <form method="post" action="">
-        {% csrf_token %}
-        <ul>
-            <div id="map"></div>
-            <script>
-                mapboxgl.accessToken = '{{ mapbox_key }}';
-                if (!mapboxgl.supported()) {
-                    alert('Your browser does not support Mapbox GL');
-                } else {
-                    const map = new mapboxgl.Map({
-                        container: 'map',
-                        style: 'mapbox://styles/mapbox/streets-v11',
-                        center: [{{ memory.point_lng }}, {{ memory.point_lat }}],
-                        zoom: 13,
-                        interactive: false
-                    });
-                }
-            </script>
-            <p>Name: {{ memory.name }}</p>
-            <p>Comment: {{ memory.comment }}</p>
-        </ul>
-        <input name='{{ memory.id }}' type="submit" value="Delete">
-        </form>
-        {% endfor %}
+        <div class="album py-5">
+            <div class="container">
+                <div class="row infinite-container">
+                    {% for memory in memories %}
+                        <div class="col-md-6 infinite-item">
+                            <div class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <form method="post" action="">
+                                        {% csrf_token %}
+                                        <div class="card-map">
+                                            <div id="map{{ memory.id }}"></div>
+                                            <style>
+                                                #map{{ memory.id }} {
+                                                    display: inline-block;
+                                                    width: 500px;
+                                                    height: 500px;
+                                                    background-color: #ffc;
+                                                    margin: 50px 0px;}
+                                            </style>
+                                            <script>
+                                                mapboxgl.accessToken = '{{ mapbox_key }}';
+                                                if (!mapboxgl.supported()) {
+                                                    alert('Your browser does not support Mapbox GL');
+                                                } else {
+                                                    const map = new mapboxgl.Map({
+                                                        container: 'map{{ memory.id }}',
+                                                        style: 'mapbox://styles/mapbox/streets-v11',
+                                                        center: [{{ memory.point_lng }}, {{ memory.point_lat }}],
+                                                        zoom: 13,
+                                                        interactive: false
+                                                    });
+                                                }
+                                            </script>
+                                        </div>
+                                        <div class="card-name">
+                                            <h5>{{ memory.name }}</h5>
+                                            <p class="card-text">{{ memory.comment }}</p>
+                                        </div>
+                                        <input name='{{ memory.id }}' type="submit" value="Delete">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if page_obj.has_next %}
+                <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+                {% endif %}
+                {% if memories|length < 0 %}
+                <div class="d-flex justify-content-center" style="display:none;">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    <script src="../../static/js/jquery-2.2.4.min.js"></script>
+    <script src="../../static/js/jquery.waypoints.min.js"></script>
+    <script src="../../static/js/infinite.min.js"></script>
+    <script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        handler: function(direction) {
+    },
+    offset: 'bottom-in-view',
+    onBeforePageLoad: function () {
+    $('.spinner-border').show();
+    },
+    onAfterPageLoad: function () {
+    $('.spinner-border').hide();
+    }
+    });
+    </script>
     {% else %}
         <p>
             <a href="addmemory/">Create a new memory</a>

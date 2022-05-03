@@ -1,6 +1,7 @@
 from core.handlers import vk_access_token
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic.list import ListView
 from django.contrib.auth.models import User
 from .forms import MemoryForm
 from .models import Memory
@@ -8,33 +9,26 @@ import re
 import secret
 
 
-class Index(View):
-    def get(self, request):
-        if request.user.is_authenticated:
-            if not request.user.is_superuser:
-                mapbox_key = secret.mapbox_key
-                vk_token = vk_access_token.get_access_token(request)[0]
-                owner_id = vk_access_token.get_access_token(request)[1]
-                memories_user = User.objects.get(id=request.user.id).memories.all()
-                return render(request, 'core/index.html', {'vk_access_token': vk_token,
-                                                           'owner_id_vk': owner_id,
-                                                           'memories': memories_user,
-                                                           'mapbox_key': mapbox_key,
-                                                           })
-        return render(request, 'core/index.html')
+class Index(ListView):
+    model = Memory
+    template_name = 'core/index.html'
+    context_object_name = 'memories'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        if self.request.user.is_authenticated:
+            if not self.request.user.is_superuser:
+                context = super().get_context_data()
+                context['vk_access_token'] = vk_access_token.get_access_token(self.request)[0]
+                context['owner_id_vk'] = vk_access_token.get_access_token(self.request)[1]
+                context['mapbox_key'] = secret.mapbox_key
+                return context
+        context = super().get_context_data()
+        return context
 
     def post(self, request):
-        mapbox_key = secret.mapbox_key
         id_memory = list(request.POST)[1]
         Memory.objects.get(id=id_memory).delete()
-        vk_token = vk_access_token.get_access_token(request)[0]
-        owner_id = vk_access_token.get_access_token(request)[1]
-        memories_user = User.objects.get(id=request.user.id).memories.all()
-        return render(request, 'core/index.html', {'vk_access_token': vk_token,
-                                                   'owner_id_vk': owner_id,
-                                                   'memories': memories_user,
-                                                   'mapbox_key': mapbox_key,
-                                                   })
+        return redirect('/')
 
 
 class AddMemory(View):
