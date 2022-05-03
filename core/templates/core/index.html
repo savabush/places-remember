@@ -46,6 +46,14 @@
                                                     height: 500px;
                                                     background-color: #ffc;
                                                     margin: 50px 0px;}
+                                                #marker {
+                                                    background: rgba(0, 0, 200, 0.8);
+                                                    background-size: cover;
+                                                    width: 15px;
+                                                    height: 15px;
+                                                    border-radius: 50%;
+                                                    cursor: pointer;
+                                                    }
                                             </style>
                                             <script>
                                                 mapboxgl.accessToken = '{{ mapbox_key }}';
@@ -59,6 +67,13 @@
                                                         zoom: 13,
                                                         interactive: false
                                                     });
+                                                    const popup = new mapboxgl.Popup({ offset: 25 });
+                                                    const el = document.createElement('div');
+                                                    el.id = 'marker';
+                                                    new mapboxgl.Marker(el)
+                                                        .setLngLat([{{ memory.point_lng }}, {{ memory.point_lat }}])
+                                                        .setPopup(popup)
+                                                        .addTo(map);
                                                 }
                                             </script>
                                         </div>
