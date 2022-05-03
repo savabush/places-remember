@@ -12,15 +12,19 @@ class Index(View):
     def get(self, request):
         if request.user.is_authenticated:
             if not request.user.is_superuser:
+                mapbox_key = secret.mapbox_key
                 vk_token = vk_access_token.get_access_token(request)[0]
                 owner_id = vk_access_token.get_access_token(request)[1]
                 memories_user = User.objects.get(id=request.user.id).memories.all()
                 return render(request, 'core/index.html', {'vk_access_token': vk_token,
                                                            'owner_id_vk': owner_id,
-                                                           'memories': memories_user})
+                                                           'memories': memories_user,
+                                                           'mapbox_key': mapbox_key,
+                                                           })
         return render(request, 'core/index.html')
 
     def post(self, request):
+        mapbox_key = secret.mapbox_key
         id_memory = list(request.POST)[1]
         Memory.objects.get(id=id_memory).delete()
         vk_token = vk_access_token.get_access_token(request)[0]
@@ -28,7 +32,9 @@ class Index(View):
         memories_user = User.objects.get(id=request.user.id).memories.all()
         return render(request, 'core/index.html', {'vk_access_token': vk_token,
                                                    'owner_id_vk': owner_id,
-                                                   'memories': memories_user})
+                                                   'memories': memories_user,
+                                                   'mapbox_key': mapbox_key,
+                                                   })
 
 
 class AddMemory(View):

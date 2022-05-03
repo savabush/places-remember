@@ -2,10 +2,11 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Check if Mapbox GL JS is supported</title>
+<title>Add a mempory</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <style>
 body { margin: 0; padding: 0; }
 #map { position: absolute; top: -1; bottom: 0; width: 100%; height: 50% }
@@ -20,8 +21,24 @@ body { margin: 0; padding: 0; }
 <form method="post" action="">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Add a memory">
+    <button class="addmem" type="submit" value="Add a memory">Add a memory</button>
+    <script>
+        $('.addmem').on('click', function () {
+        var url = new URLSearchParams(window.location.search);
+        params = {};
+        url.forEach((p, key) => {
+                params[key] = p;
+            });
+        if (Object.keys(params).length == 0) {
+            alert('Pick your place on a map');
+            return false
+        };
+        });
+    </script>
 </form>
+<p>
+    <a href="/">Back</a>
+</p>
 <script>
 	mapboxgl.accessToken = '{{ mapbox_key }}';
     if (!mapboxgl.supported()) {
