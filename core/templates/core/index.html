@@ -64,7 +64,7 @@
                                                         container: 'map{{ memory.id }}',
                                                         style: 'mapbox://styles/mapbox/streets-v11',
                                                         center: [{{ memory.point_lng }}, {{ memory.point_lat }}],
-                                                        zoom: 13,
+                                                        zoom: 15,
                                                         interactive: false
                                                     });
                                                     const popup = new mapboxgl.Popup({ offset: 25 });
@@ -81,7 +81,7 @@
                                             <h5>{{ memory.name }}</h5>
                                             <p class="card-text">{{ memory.comment }}</p>
                                         </div>
-                                        <input name='{{ memory.id }}' type="submit" value="Delete">
+                                        <input name='{{ memory.id }}' type="submit" value="Delete memory">
                                     </form>
                                 </div>
                             </div>

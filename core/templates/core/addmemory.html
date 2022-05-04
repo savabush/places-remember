@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Add a mempory</title>
+<title>Add a memory</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
@@ -10,6 +10,14 @@
 <style>
 body { margin: 0; padding: 0; }
 #map { position: absolute; top: -1; bottom: 0; width: 100%; height: 50% }
+#marker {
+    background: rgba(0, 0, 200, 0.8);
+    background-size: cover;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    }
 </style>
 </head>
 <body>
@@ -47,7 +55,7 @@ body { margin: 0; padding: 0; }
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
-            center: [-74.5, 40],
+            center: [50, 50],
             zoom: 9,
         });
         const coordinatesGeocoder = function (query) {
@@ -115,11 +123,27 @@ body { margin: 0; padding: 0; }
             trackUserLocation: true,
             showUserHeading: true
         }));
+
+
+        const popup = new mapboxgl.Popup({ offset: 25 });
+        const el = document.createElement('div');
+        el.id = 'marker';
+        pop = new mapboxgl.Marker(el)
+            .setLngLat([50, 50])
+            .setPopup(popup)
+            .addTo(map);
+
+
         map.on('click', (e) => {
             const url = new URL(window.location.href);
             url.searchParams.set('points', JSON.stringify(e.lngLat.wrap()));
             window.history.pushState({ path: url.href }, '', url.href);
+            const popup = new mapboxgl.Popup({ offset: 25 });
+            const el = document.createElement('div');
+            el.id = 'marker';
+            pop.setLngLat([Object.values(e.lngLat.wrap())[0], Object.values(e.lngLat.wrap())[1]]).addTo(map);
         });
+
     }
 </script>
 </body>
