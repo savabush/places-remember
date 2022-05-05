@@ -21,8 +21,7 @@
         }
     </style>
 </head>
-<body>
-
+<body class="bg-light">
 {% if user.is_authenticated %}
     <nav class="navbar navbar-dark sticky-top bg-dark box-shadow">
         <div class="container-fluid px-4">
@@ -124,7 +123,7 @@
             <span class="fs-1" >It looks like you haven't add any of your memories. Let's <mark><a class="fs-1 btn" href="addmemory/">fix</a></mark> it.</span>
         </div>
     {% endif %}
-        <div class="navbar-dark bg-dark">
+        <div class="navbar-dark fixed-bottom bg-dark">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 my-2">
@@ -140,7 +139,7 @@
             <div class="text-center fs-2">
                 A place to store your memories.
             </div>
-            <div class="text-center fs-2 m-5">
+            <div class="text-center fs-2">
                 Have you been to some place and want to leave this memory online?
             </div>
             <div class="text-center fs-2">
