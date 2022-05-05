@@ -22,15 +22,18 @@
     </style>
 </head>
 <body>
+
 {% if user.is_authenticated %}
-    <nav class="navbar navbar-dark sticky-top bg-dark rounded">
-        <div class="container-fluid">
-            <div class="d-inline" id="navbarCollapse">
-                <img id="profile_img" src=""class="rounded-circle cover">
-                <span class="fs-4 text-white m-4" aria-current="page" style="font-family: 'Playfair Display SC', serif;">{{ user.first_name }}</span>
+    <nav class="navbar navbar-dark sticky-top bg-dark box-shadow">
+        <div class="container-fluid px-4">
+            <div class="d-inline text-center" id="navbarCollapse">
+                <div class="">
+                    <img id="profile_img" src="" class="rounded-circle cover" style="height: 50px; width: 50px;">
+                </div>
+                <span class="fs-5 text-secondary text-uppercase" aria-current="page" style="font-family: 'Oswald', sans-serif;">{{ user.first_name }}</span>
             </div>
-            <a class="text-center me-5 btn btn-outline-success text-white fs-1" href='addmemory/' style="font-family: 'Playfair Display SC', serif;">Add a new memory</a>
-            <a class="btn btn-outline-success" href="logout/" style="font-family: 'Playfair Display SC', serif;">Logout</a>
+            <a class="btn btn-outline-primary text-white fs-2" href='addmemory/' style="font-family: 'Oswald', sans-serif;">Add a new memory</a>
+            <a class=" btn btn-outline-success" href="logout/" style="font-family: 'Oswald', sans-serif;">Logout</a>
             <script type="text/javascript">
                 $.getJSON('https://api.vk.com/method/photos.get?album_id=profile&owner_id={{ owner_id_vk }}&v=5.131&access_token={{ vk_access_token }}',
                 function(profile_pic) {
@@ -41,25 +44,23 @@
             </script>
         </div>
     </nav>
+    <div class="text-center m-2">
+        <span class="fs-1" style="font-family: 'Oswald', sans-serif;">A place to store your memories</span>
+    </div>
     {% if memories %}
-        <div class="album py-5">
+        <div class="album bg-light">
             <div class="container">
                 <div class="row infinite-container">
                     {% for memory in memories %}
                         <div class="col-md-6 infinite-item">
                             <div class="card mb-4 shadow-sm">
+                                <div id="map{{ memory.id }}" class="card-img-top" style="display: block;width: 100%;height: 500px;background-color: #ffc;margin: 0px 0px;"></div>
                                 <div class="card-body">
-                                    <form method="post" action="">
-                                        {% csrf_token %}
-                                        <div class="card-map">
-                                            <div id="map{{ memory.id }}"></div>
-                                            <style>
-                                                #map{{ memory.id }} {
-                                                    display: inline-block;
-                                                    width: 500px;
-                                                    height: 500px;
-                                                    background-color: #ffc;
-                                                    margin: 50px 0px;}
+                                </div>
+                                <form method="post" action="">
+                                    {% csrf_token %}
+                                    <div class="card-map">
+                                        <style>
                                                 #marker {
                                                     background: rgba(0, 0, 200, 0.8);
                                                     background-size: cover;
@@ -69,7 +70,7 @@
                                                     cursor: pointer;
                                                     }
                                             </style>
-                                            <script>
+                                        <script>
                                                 mapboxgl.accessToken = '{{ mapbox_key }}';
                                                 if (!mapboxgl.supported()) {
                                                     alert('Your browser does not support Mapbox GL');
@@ -90,55 +91,78 @@
                                                         .addTo(map);
                                                 }
                                             </script>
-                                        </div>
-                                        <div class="card-name">
-                                            <h5>{{ memory.name }}</h5>
-                                            <p class="card-text">{{ memory.comment }}</p>
-                                        </div>
-                                        <input class="btn btn-primary" name='{{ memory.id }}' type="submit" value="Delete memory">
-                                    </form>
-                                </div>
+                                    </div>
+                                    <div class="card-text text-center ">
+                                        <h5>{{ memory.name }}</h5>
+                                        <p class="card-text">{{ memory.comment }}</p>
+                                        <input class="btn btn-sm btn-outline-dark m-4" name='{{ memory.id }}' type="submit" value="Delete memory">
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-                {% if page_obj.has_next %}
-                <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
-                {% endif %}
-                {% if memories|length < 0 %}
-                <div class="d-flex justify-content-center" style="display:none;">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
+                <div class="container">
+                    <div class="row">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                                {% endif %}
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                {% endif %}
             </div>
         </div>
-
-    <script src="../../static/js/jquery-2.2.4.min.js"></script>
-    <script src="../../static/js/jquery.waypoints.min.js"></script>
-    <script src="../../static/js/infinite.min.js"></script>
-    <script>
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
-        handler: function(direction) {
-    },
-    offset: 'bottom-in-view',
-    onBeforePageLoad: function () {
-    $('.spinner-border').show();
-    },
-    onAfterPageLoad: function () {
-    $('.spinner-border').hide();
-    }
-    });
-    </script>
     {% else %}
-        <p>
-            <a href="addmemory/">Create a new memory</a>
-        </p>
+        <div class="text-center m-5">
+            <span class="fs-1" >It looks like you haven't add any of your memories. Let's <mark><a class="fs-1 btn" href="addmemory/">fix</a></mark> it.</span>
+        </div>
     {% endif %}
+        <div class="navbar-dark bg-dark">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 my-2">
+                        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" class="rounded-circle cover" style="height: 30px; width: 30px;">
+                        <span class="fs-6 text-secondary mx-2" aria-current="page">Made by: <a class="link-secondary" href="https://github.com/savabush" target="_blank">savabush</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% else %}
-<a href="login/vk-oauth2">Sign in with VKontakte</a>
+    <div class="m-5" style="font-family: 'Oswald', sans-serif;">
+        <div class="row">
+            <div class="text-center fs-2">
+                A place to store your memories.
+            </div>
+            <div class="text-center fs-2 m-5">
+                Have you been to some place and want to leave this memory online?
+            </div>
+            <div class="text-center fs-2">
+                Then this is place for you.
+            </div>
+            <div class="container-fluid text-center my-5">
+                <a class="btn btn-outline-success fs-2" href="/login/vk-oauth2">Login with VK</a>
+            </div>
+        </div>
+    </div>
+    <div class="navbar-dark bg-dark fixed-bottom">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 my-2">
+                    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" class="rounded-circle cover" style="height: 30px; width: 30px;">
+                    <span class="fs-6 text-secondary mx-2" aria-current="page">Made by: <a class="link-secondary" href="https://github.com/savabush" target="_blank">savabush</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endif %}
 </body>
 </html>

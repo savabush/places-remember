@@ -8,6 +8,10 @@
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet"
+      href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+      type="text/css">
 <style>
 body { margin: 0; padding: 0; }
 #map { position: absolute; top: -1; bottom: 0; width: 100%; height: 50% }
@@ -22,10 +26,14 @@ body { margin: 0; padding: 0; }
 </style>
 </head>
 <body>
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-<link rel="stylesheet"
-      href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
-      type="text/css">
+<nav class="navbar navbar-dark fixed-bottom bg-dark rounded">
+        <div class="container-fluid">
+            <div class="my-2">
+                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" class="rounded-circle cover" style="height: 30px; width: 30px;">
+                <span class="fs-6 text-secondary mx-2" aria-current="page">Made by: <a class="link-secondary" href="https://github.com/savabush" target="_blank">savabush</a></span>
+            </div>
+        </div>
+    </nav>
 <div id="map"></div>
 <form method="post" action="">
     {% csrf_token %}

@@ -13,6 +13,7 @@ class Index(ListView):
     model = Memory
     template_name = 'core/index.html'
     context_object_name = 'memories'
+    paginate_by = 10
 
     def get_context_data(self, *, object_list=None, **kwargs):
         if self.request.user.is_authenticated:
