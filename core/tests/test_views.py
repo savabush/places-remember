@@ -31,8 +31,6 @@ class TestViews(TestCase):
         object_of_model.delete()
         self.assertEquals(models.Memory.objects.all().count(), 14)
 
-    def test_addmemory_get(self):
+    def test_addmemory_nolog_get(self):
         response = self.client.get(reverse('addmemory'))
-
-        self.assertURLEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'core/addmemory.html')
+        self.assertURLEqual(response.status_code, 302)
