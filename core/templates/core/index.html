@@ -37,12 +37,13 @@
                 <a class=" btn btn-outline-success fs-5 " href="logout/" style="font-family: 'Oswald', sans-serif;">Logout</a>
             </div>
             <script type="text/javascript">
-                $.getJSON('https://api.vk.com/method/photos.get?album_id=profile&owner_id={{ owner_id_vk }}&v=5.131&access_token={{ vk_access_token }}',
-                function(profile_pic) {
-                var profile_pic_items = profile_pic.response.items[profile_pic.response.items.length - 1]
-                profile_pic = JSON.stringify(profile_pic_items.sizes[profile_pic_items.sizes.length - 1].url)
-                document.getElementById('profile_img').src = profile_pic.slice(1, -1);
-                });
+                var script = document.createElement('script');
+                script.src = 'https://api.vk.com/method/photos.get?album_id=profile&owner_id={{ owner_id_vk }}&v=5.131&access_token={{ vk_access_token }}&callback=callbackFunc'
+                document.getElementsByTagName('head')[0].appendChild(script);
+                function callbackFunc(result) {
+                    items = result.response.items[result.response.items.length - 1];
+                    document.getElementById('profile_img').src = JSON.stringify(items.sizes[items.sizes.length - 1].url).slice(1, -1);
+                };
             </script>
         </div>
     </nav>
