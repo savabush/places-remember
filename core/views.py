@@ -10,7 +10,7 @@ import secret
 
 
 class Index(ListView):
-    model = Memory
+    model = User
     template_name = 'core/index.html'
     context_object_name = 'memories'
     paginate_by = 10
@@ -26,6 +26,12 @@ class Index(ListView):
         context = super().get_context_data()
         return context
 
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            if not self.request.user.is_superuser:
+                return User.objects.get(id=self.request.user.id).memories.all()
+        return User.objects.all()
+
     def post(self, request):
         id_memory = list(request.POST)[1]
         Memory.objects.get(id=id_memory).delete()
@@ -37,8 +43,10 @@ class AddMemory(View):
     mapbox_key = secret.mapbox_key
 
     def get(self, request):
-        form = self.form_class()
-        return render(request, 'core/addmemory.html', {'mapbox_key': self.mapbox_key, 'form': form})
+        if request.user.is_authenticated:
+            form = self.form_class()
+            return render(request, 'core/addmemory.html', {'mapbox_key': self.mapbox_key, 'form': form})
+        return redirect('/')
 
     def post(self, request):
         form = self.form_class(request.POST)
