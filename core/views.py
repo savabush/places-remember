@@ -29,7 +29,7 @@ class Index(ListView):
     def get_queryset(self):
         if self.request.user.is_authenticated:
             if not self.request.user.is_superuser:
-                return User.objects.get(id=self.request.user.id).memories.all()
+                return User.objects.get(id=self.request.user.id).memories.all()[::-1]
         return User.objects.all()
 
     def post(self, request):
