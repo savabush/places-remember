@@ -1,0 +1,17 @@
+language: python
+
+# python versions
+python:
+  - '3.10'
+
+# install requirements
+install:
+  - pip install -r requirements.txt
+
+# to run tests
+script:
+  - coverage run --source=core manage.py test
+
+# send coverage report to coveralls
+after_success:
+  - coveralls
